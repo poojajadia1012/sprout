@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(brew --version)",
+      "Bash(/opt/homebrew/bin/brew install node)",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Bash(npx create-expo-app@latest . --template blank-typescript)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\(''version'',''?''\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); deps=d.get\\(''peerDependencies'',{}\\); [print\\(k,v\\) for k,v in deps.items\\(\\)]\")",
+      "Bash(npx expo install @supabase/supabase-js @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context expo-auth-session expo-web-browser expo-crypto expo-linking expo-constants expo-secure-store react-native-url-polyfill @react-native-async-storage/async-storage)"
+    ]
+  }
+}
