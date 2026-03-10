@@ -57,7 +57,7 @@ const defaultDraft: HealthProfileDraft = {
 
 // Silently calculates calorie target using Mifflin-St Jeor formula.
 // This number is never shown to the user — it's used by the recipe engine.
-function calculateCalories(
+export function calculateCalories(
   weightKg: number,
   heightCm: number,
   dateOfBirth: string,
@@ -91,7 +91,7 @@ function calculateCalories(
 }
 
 // Returns the macro percentage split based on the health goal.
-function getMacros(goal: HealthGoal): { protein_pct: number; carbs_pct: number; fat_pct: number } {
+export function getMacros(goal: HealthGoal): { protein_pct: number; carbs_pct: number; fat_pct: number } {
   switch (goal) {
     case 'weight_loss':     return { protein_pct: 40, carbs_pct: 30, fat_pct: 30 };
     case 'muscle_gain':     return { protein_pct: 35, carbs_pct: 45, fat_pct: 20 };
