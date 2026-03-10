@@ -3,17 +3,22 @@ import {
   Alert,
   Modal,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AppStackParamList } from '../../navigation/AppStack';
 import { useAuth } from '../../hooks/useAuth';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import SecondaryButton from '../../components/common/SecondaryButton';
 import FormError from '../../components/auth/FormError';
 
-export default function SettingsScreen() {
+type Props = NativeStackScreenProps<AppStackParamList, 'Settings'>;
+
+export default function SettingsScreen({ navigation }: Props) {
   const { dbUser, signOut, deleteAccount } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -34,8 +39,23 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account</Text>
+      <ScrollView contentContainerStyle={styles.scroll}>
+
+        {/* Health Profile section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Health Profile</Text>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={() => navigation.navigate('EditHealthProfile')}
+          >
+            <Text style={styles.label}>My profile</Text>
+            <Text style={styles.chevron}>›</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Account section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account</Text>
 
         <View style={styles.row}>
           <Text style={styles.label}>Name</Text>
@@ -57,14 +77,16 @@ export default function SettingsScreen() {
             </Text>
           </View>
         </View>
-      </View>
+        </View>
 
-      <View style={styles.footer}>
-        <SecondaryButton title="Sign out" onPress={signOut} />
-        <TouchableOpacity onPress={() => setShowDeleteModal(true)} style={styles.deleteLink}>
-          <Text style={styles.deleteLinkText}>Delete account</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.footer}>
+          <SecondaryButton title="Sign out" onPress={signOut} />
+          <TouchableOpacity onPress={() => setShowDeleteModal(true)} style={styles.deleteLink}>
+            <Text style={styles.deleteLinkText}>Delete account</Text>
+          </TouchableOpacity>
+        </View>
+
+      </ScrollView>
 
       <Modal visible={showDeleteModal} transparent animationType="fade">
         <View style={styles.overlay}>
@@ -91,6 +113,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
+  scroll: { paddingBottom: 48 },
   section: {
     marginTop: 24,
     marginHorizontal: 24,
@@ -121,6 +144,7 @@ const styles = StyleSheet.create({
   },
   label: { fontSize: 15, color: '#6B7280' },
   value: { fontSize: 15, color: '#1A1A1A', fontWeight: '500', maxWidth: '60%', textAlign: 'right' },
+  chevron: { fontSize: 20, color: '#9CA3AF' },
   badge: {
     backgroundColor: '#FFF7ED',
     paddingHorizontal: 10,
@@ -128,7 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   badgeText: { fontSize: 13, color: '#FF6B35', fontWeight: '600' },
-  footer: { position: 'absolute', bottom: 32, left: 24, right: 24, gap: 4 },
+  footer: { marginTop: 32, marginHorizontal: 24, gap: 4 },
   deleteLink: { alignItems: 'center', paddingVertical: 12 },
   deleteLinkText: { color: '#EF4444', fontSize: 14, fontWeight: '500' },
   overlay: {
