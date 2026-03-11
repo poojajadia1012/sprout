@@ -80,7 +80,10 @@ export default function SettingsScreen({ navigation }: Props) {
         </View>
 
         <View style={styles.footer}>
-          <SecondaryButton title="Sign out" onPress={signOut} />
+          <PrimaryButton
+            title="Sign out"
+            onPress={signOut}
+          />
           <TouchableOpacity onPress={() => setShowDeleteModal(true)} style={styles.deleteLink}>
             <Text style={styles.deleteLinkText}>Delete account</Text>
           </TouchableOpacity>
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   badgeText: { fontSize: 13, color: '#FF6B35', fontWeight: '600' },
-  footer: { marginTop: 32, marginHorizontal: 24, gap: 4 },
+  footer: { marginTop: 32, marginHorizontal: 40, gap: 16 },
   deleteLink: { alignItems: 'center', paddingVertical: 12 },
   deleteLinkText: { color: '#EF4444', fontSize: 14, fontWeight: '500' },
   overlay: {

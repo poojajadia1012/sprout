@@ -18,14 +18,6 @@ export default function WelcomeScreen({ navigation }: Props) {
       </View>
 
       <View style={styles.actions}>
-        <GoogleSignInButton />
-
-        <View style={styles.dividerRow}>
-          <View style={styles.divider} />
-          <Text style={styles.dividerText}>or</Text>
-          <View style={styles.divider} />
-        </View>
-
         <PrimaryButton
           title="Create an account"
           onPress={() => navigation.navigate('SignUp')}
@@ -34,6 +26,14 @@ export default function WelcomeScreen({ navigation }: Props) {
           title="Sign in"
           onPress={() => navigation.navigate('Login')}
         />
+
+        <View style={styles.dividerRow}>
+          <View style={styles.divider} />
+          <Text style={styles.dividerText}>or</Text>
+          <View style={styles.divider} />
+        </View>
+
+        <GoogleSignInButton />
       </View>
     </SafeAreaView>
   );
@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingBottom: 32,
-    gap: 8,
+    paddingHorizontal: 16,
+    gap: 10,
   },
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 4,
   },
   divider: {
     flex: 1,

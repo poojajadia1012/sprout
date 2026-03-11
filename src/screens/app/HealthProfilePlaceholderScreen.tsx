@@ -64,5 +64,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#1A1A1A',
   },
-  footer: { paddingBottom: 32, gap: 4 },
+  footer: { paddingBottom: 32, paddingHorizontal: 16, gap: 4 },
 });

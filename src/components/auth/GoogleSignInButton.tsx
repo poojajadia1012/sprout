@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
+import GoogleLogo from '../common/GoogleLogo';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { useAuth } from '../../hooks/useAuth';
@@ -62,7 +62,7 @@ export default function GoogleSignInButton({ style, onError }: Props) {
         <ActivityIndicator color="#1A1A1A" />
       ) : (
         <>
-          <Text style={styles.googleIcon}>G</Text>
+          <GoogleLogo size={20} />
           <Text style={styles.text}>Continue with Google</Text>
         </>
       )}
@@ -78,18 +78,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E7EB',
     borderRadius: 12,
-    paddingVertical: 14,
+    paddingVertical: 18,
     backgroundColor: '#fff',
     width: '100%',
     gap: 10,
   },
   disabled: {
     opacity: 0.5,
-  },
-  googleIcon: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#4285F4',
   },
   text: {
     fontSize: 16,
