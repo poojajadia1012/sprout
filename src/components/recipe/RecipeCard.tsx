@@ -11,13 +11,17 @@ import { Recipe, MEAL_TYPE_GRADIENTS } from '../../data/seedRecipes';
 
 type Props = {
   recipe: Recipe;
+  userAllergens: string[];
   onPress: () => void;
 };
 
-export default function RecipeCard({ recipe, onPress }: Props) {
+export default function RecipeCard({ recipe, userAllergens, onPress }: Props) {
   const [saveCount, setSaveCount] = useState(recipe.save_count);
   const [saved, setSaved] = useState(false);
   const gradient = MEAL_TYPE_GRADIENTS[recipe.meal_type];
+
+  // Allergens in this recipe that the user is allergic to
+  const matchedAllergens = recipe.allergens.filter((a) => userAllergens.includes(a));
 
   function handleSave() {
     // Optimistic update — toggles save and adjusts count immediately
@@ -74,6 +78,15 @@ export default function RecipeCard({ recipe, onPress }: Props) {
             </View>
           ))}
         </View>
+
+        {/* Allergen warning — shown only when the recipe contains one of the user's allergens */}
+        {matchedAllergens.length > 0 && (
+          <View style={styles.allergenWarning}>
+            <Text style={styles.allergenWarningText}>
+              ⚠️ Contains {matchedAllergens.join(', ')}
+            </Text>
+          </View>
+        )}
 
         {/* Save button */}
         <TouchableOpacity style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
@@ -174,6 +187,19 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 12,
     color: '#fff',
+    fontWeight: '600',
+  },
+  allergenWarning: {
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 12,
+    alignSelf: 'flex-start',
+  },
+  allergenWarningText: {
+    fontSize: 12,
+    color: '#FEF08A',  // soft yellow — readable on all card gradients
     fontWeight: '600',
   },
   saveButton: {

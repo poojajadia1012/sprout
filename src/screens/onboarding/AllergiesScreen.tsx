@@ -36,16 +36,12 @@ export default function AllergiesScreen({ navigation }: Props) {
   }
 
   async function handleFinish() {
-    // Save allergens to the draft first, then persist everything to Supabase
-    updateDraft({ allergens: selected });
-
     setIsSaving(true);
     setError(null);
 
-    // saveProfile() runs the calorie calculation silently, writes to the database,
-    // and updates the user's status to 'active'.
-    // RootNavigator will detect the status change and route to the main app automatically.
-    const result = await saveProfile();
+    // Pass allergens as an override so saveProfile reads the current selection
+    // directly — avoids a React setState race where draft.allergens is still stale.
+    const result = await saveProfile({ allergens: selected });
 
     setIsSaving(false);
     if (result.error) setError(result.error);

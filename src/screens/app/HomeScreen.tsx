@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -43,8 +43,16 @@ export default function HomeScreen() {
       });
   }, [user, existingProfile]);
 
-  const visibleRecipes: Recipe[] = SEED_RECIPES.slice(0, page * PAGE_SIZE);
-  const hasMore = visibleRecipes.length < SEED_RECIPES.length;
+  // Vegan users only see vegan recipes. Allergen matches are shown as warnings on the card, not filtered out.
+  const filteredRecipes = useMemo(() => {
+    if (!existingProfile?.is_vegan) return SEED_RECIPES;
+    return SEED_RECIPES.filter((r) => r.dietary_tags.includes('Vegan'));
+  }, [existingProfile]);
+
+  const userAllergens: string[] = existingProfile?.allergens ?? [];
+
+  const visibleRecipes: Recipe[] = filteredRecipes.slice(0, page * PAGE_SIZE);
+  const hasMore = visibleRecipes.length < filteredRecipes.length;
 
   const goal = existingProfile?.health_goal ?? 'eat_healthier';
   const motivationalMessage = MOTIVATIONAL_MESSAGES[goal];
@@ -66,6 +74,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <RecipeCard
             recipe={item}
+            userAllergens={userAllergens}
             onPress={() => {
               // TODO: navigate to RecipeDetailScreen
             }}

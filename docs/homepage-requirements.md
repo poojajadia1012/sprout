@@ -52,6 +52,18 @@ The homepage is composed of three layers from top to bottom:
 - Feed loads **10 cards per page** with a **"Load more"** button at the bottom
 - There is no trending logic in P0 — the feed is the seed recipe catalogue
 
+#### Dietary Filtering (P0)
+The feed is filtered client-side against the user's health profile before display:
+1. **Vegan mode** — if `health_profiles.is_vegan = true`, only recipes tagged `'Vegan'` are shown; all other recipes are hidden
+2. **Allergen warnings** — recipes are **never hidden** based on allergens; instead, a warning tag is shown on any recipe that contains an allergen the user has flagged
+   - Warning renders as: *"⚠️ Contains Gluten, Dairy"* (listing only the matched allergens)
+   - Allergen names on recipes exactly match the strings stored in the user's `allergens` array (e.g. `'Dairy'`, `'Gluten'`, `'Peanuts'`)
+   - Rationale: hiding recipes is too paternalistic, and breaks down in social contexts (P3+) where users may want to see recipes from people they follow even if they contain an allergen they manage
+
+#### Dietary Tag Rules
+- A recipe tagged `'Vegan'` does **not** also carry the `'Vegetarian'` tag (vegan implies vegetarian; duplicate is omitted)
+- All Sprout recipes are vegetarian by definition — the `'Vegetarian'` tag is shown only on non-vegan vegetarian recipes
+
 #### P1
 - Switch to **trending recipes** (most generated globally, weighted by the user's cuisine preferences) once real usage data exists
 - Switch to **infinite scroll** as the app grows and social features are added

@@ -36,7 +36,7 @@ export type HealthProfile = HealthProfileDraft & {
 type HealthProfileContextValue = {
   draft: HealthProfileDraft;
   updateDraft: (fields: Partial<HealthProfileDraft>) => void;
-  saveProfile: () => Promise<{ error: string | null }>;
+  saveProfile: (overrides?: Partial<HealthProfileDraft>) => Promise<{ error: string | null }>;
   existingProfile: HealthProfile | null;
   setExistingProfile: (profile: HealthProfile | null) => void;
 };
@@ -110,33 +110,36 @@ export function HealthProfileProvider({ children }: { children: React.ReactNode 
     setDraft((prev) => ({ ...prev, ...fields }));
   }
 
-  async function saveProfile(): Promise<{ error: string | null }> {
+  async function saveProfile(overrides?: Partial<HealthProfileDraft>): Promise<{ error: string | null }> {
     if (!user) return { error: 'Not logged in.' };
-    if (!draft.date_of_birth || !draft.biological_sex || !draft.height_cm || !draft.weight_kg || !draft.health_goal) {
+    // Merge any last-step overrides (e.g. allergens from AllergiesScreen) so we
+    // don't rely on setState having flushed before this function is called.
+    const data = { ...draft, ...overrides };
+    if (!data.date_of_birth || !data.biological_sex || !data.height_cm || !data.weight_kg || !data.health_goal) {
       return { error: 'Profile is incomplete.' };
     }
 
     // Calculate silently — user never sees these numbers
     const calorie_target = calculateCalories(
-      draft.weight_kg,
-      draft.height_cm,
-      draft.date_of_birth,
-      draft.biological_sex,
-      draft.health_goal,
+      data.weight_kg,
+      data.height_cm,
+      data.date_of_birth,
+      data.biological_sex,
+      data.health_goal,
     );
-    const macros = getMacros(draft.health_goal);
+    const macros = getMacros(data.health_goal);
 
     const { error } = await supabase.from('health_profiles').upsert({
       user_id: user.id,
-      date_of_birth: draft.date_of_birth,
-      biological_sex: draft.biological_sex,
-      height_cm: draft.height_cm,
-      weight_kg: draft.weight_kg,
-      unit_preference: draft.unit_preference,
-      health_goal: draft.health_goal,
-      is_vegan: draft.is_vegan,
-      cuisine_preferences: draft.cuisine_preferences,
-      allergens: draft.allergens,
+      date_of_birth: data.date_of_birth,
+      biological_sex: data.biological_sex,
+      height_cm: data.height_cm,
+      weight_kg: data.weight_kg,
+      unit_preference: data.unit_preference,
+      health_goal: data.health_goal,
+      is_vegan: data.is_vegan,
+      cuisine_preferences: data.cuisine_preferences,
+      allergens: data.allergens,
       calorie_target,
       ...macros,
       updated_at: new Date().toISOString(),

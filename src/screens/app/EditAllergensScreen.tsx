@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/AppStack';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useHealthProfile } from '../../context/HealthProfileContext';
 import PrimaryButton from '../../components/common/PrimaryButton';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditAllergens'>;
@@ -20,6 +21,7 @@ const ALLERGENS = [
 
 export default function EditAllergensScreen({ navigation, route }: Props) {
   const { user } = useAuth();
+  const { existingProfile, setExistingProfile } = useHealthProfile();
   const [selected, setSelected] = useState<string[]>(route.params.allergens);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,8 @@ export default function EditAllergensScreen({ navigation, route }: Props) {
       .eq('user_id', user.id);
     setSaving(false);
     if (saveError) { setError(saveError.message); return; }
+    // Sync updated allergens into context so HomeScreen re-filters immediately
+    if (existingProfile) setExistingProfile({ ...existingProfile, allergens: selected });
     navigation.goBack();
   }
 

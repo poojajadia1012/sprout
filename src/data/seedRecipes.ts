@@ -8,18 +8,24 @@ export type Recipe = {
   protein_g: number;
   carbs_g: number;
   fat_g: number;
-  prep_time: number; // minutes
-  cook_time: number; // minutes
-  dietary_tags: string[];
+  prep_time: number;   // minutes
+  cook_time: number;   // minutes
+  dietary_tags: string[];  // display tags: 'Vegetarian' | 'Vegan' | 'Gluten-free'
+  allergens: string[];     // allergens this recipe CONTAINS — shown as a warning if user is allergic
   save_count: number;
 };
 
 export const MEAL_TYPE_GRADIENTS: Record<MealType, [string, string]> = {
-  breakfast: ['#FEF08A', '#EAB308'],  // bright yellow → amber (distinct from orange button)
+  breakfast: ['#FEF08A', '#EAB308'],  // bright yellow → amber (distinct from orange CTA button)
   lunch:     ['#BBF7D0', '#16A34A'],  // light green → deep green
   dinner:    ['#C4B5FD', '#4F46E5'],  // soft lavender → deep indigo
   snack:     ['#FECDD3', '#F43F5E'],  // soft rose → coral
 };
+
+// Allergen names must exactly match the values in the user's health_profiles.allergens array.
+// Reference list (14 major EU allergens):
+// Gluten, Crustaceans, Eggs, Fish, Peanuts, Soybeans, Dairy, Tree nuts,
+// Celery, Mustard, Sesame, Sulphites, Lupin, Molluscs
 
 export const SEED_RECIPES: Recipe[] = [
   {
@@ -29,7 +35,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'breakfast',
     protein_g: 12, carbs_g: 38, fat_g: 6,
     prep_time: 5, cook_time: 10,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan'],
+    allergens: ['Gluten'],
     save_count: 0,
   },
   {
@@ -40,6 +47,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 18, carbs_g: 42, fat_g: 5,
     prep_time: 5, cook_time: 0,
     dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -50,6 +58,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 16, carbs_g: 28, fat_g: 18,
     prep_time: 5, cook_time: 8,
     dietary_tags: ['Vegetarian'],
+    allergens: ['Gluten', 'Eggs'],
     save_count: 0,
   },
   {
@@ -59,7 +68,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'breakfast',
     protein_g: 14, carbs_g: 48, fat_g: 10,
     prep_time: 5, cook_time: 0,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan'],
+    allergens: ['Peanuts', 'Gluten'],
     save_count: 0,
   },
   {
@@ -70,6 +80,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 22, carbs_g: 45, fat_g: 12,
     prep_time: 10, cook_time: 20,
     dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -79,7 +90,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'lunch',
     protein_g: 18, carbs_g: 52, fat_g: 10,
     prep_time: 10, cook_time: 15,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan'],
+    allergens: ['Gluten', 'Sesame'],
     save_count: 0,
   },
   {
@@ -89,7 +101,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'lunch',
     protein_g: 20, carbs_g: 40, fat_g: 7,
     prep_time: 5, cook_time: 10,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan'],
+    allergens: ['Soybeans', 'Gluten'],
     save_count: 0,
   },
   {
@@ -100,6 +113,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 24, carbs_g: 38, fat_g: 14,
     prep_time: 10, cook_time: 15,
     dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -109,7 +123,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'lunch',
     protein_g: 16, carbs_g: 55, fat_g: 13,
     prep_time: 15, cook_time: 5,
-    dietary_tags: ['Vegetarian', 'Vegan', 'Gluten-free'],
+    dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: ['Peanuts', 'Soybeans'],
     save_count: 0,
   },
   {
@@ -119,7 +134,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'lunch',
     protein_g: 20, carbs_g: 60, fat_g: 11,
     prep_time: 10, cook_time: 10,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: [],
     save_count: 0,
   },
   {
@@ -130,6 +146,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 28, carbs_g: 30, fat_g: 18,
     prep_time: 15, cook_time: 25,
     dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -139,7 +156,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'dinner',
     protein_g: 16, carbs_g: 62, fat_g: 14,
     prep_time: 10, cook_time: 30,
-    dietary_tags: ['Vegetarian'],
+    dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -149,7 +167,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'dinner',
     protein_g: 22, carbs_g: 68, fat_g: 8,
     prep_time: 10, cook_time: 30,
-    dietary_tags: ['Vegetarian', 'Vegan', 'Gluten-free'],
+    dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: [],
     save_count: 0,
   },
   {
@@ -160,6 +179,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 18, carbs_g: 35, fat_g: 16,
     prep_time: 20, cook_time: 35,
     dietary_tags: ['Vegetarian'],
+    allergens: ['Dairy', 'Gluten'],
     save_count: 0,
   },
   {
@@ -170,6 +190,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 24, carbs_g: 45, fat_g: 12,
     prep_time: 10, cook_time: 15,
     dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: ['Soybeans', 'Sesame'],
     save_count: 0,
   },
   {
@@ -180,6 +201,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 26, carbs_g: 55, fat_g: 14,
     prep_time: 15, cook_time: 30,
     dietary_tags: ['Vegetarian'],
+    allergens: ['Gluten', 'Dairy'],
     save_count: 0,
   },
   {
@@ -189,7 +211,8 @@ export const SEED_RECIPES: Recipe[] = [
     meal_type: 'snack',
     protein_g: 10, carbs_g: 32, fat_g: 9,
     prep_time: 10, cook_time: 0,
-    dietary_tags: ['Vegetarian', 'Vegan'],
+    dietary_tags: ['Vegan'],
+    allergens: ['Sesame', 'Gluten'],
     save_count: 0,
   },
   {
@@ -200,6 +223,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 6, carbs_g: 28, fat_g: 10,
     prep_time: 3, cook_time: 0,
     dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: ['Tree nuts'],
     save_count: 0,
   },
   {
@@ -210,6 +234,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 14, carbs_g: 18, fat_g: 3,
     prep_time: 3, cook_time: 0,
     dietary_tags: ['Vegetarian', 'Gluten-free'],
+    allergens: ['Dairy'],
     save_count: 0,
   },
   {
@@ -220,6 +245,7 @@ export const SEED_RECIPES: Recipe[] = [
     protein_g: 8, carbs_g: 22, fat_g: 5,
     prep_time: 5, cook_time: 25,
     dietary_tags: ['Vegan', 'Gluten-free'],
+    allergens: [],
     save_count: 0,
   },
 ];
