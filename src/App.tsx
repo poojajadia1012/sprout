@@ -4,6 +4,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from './context/AuthContext';
+import { HealthProfileProvider } from './context/HealthProfileContext';
 import RootNavigator from './navigation/RootNavigator';
 import { linkingConfig, useDeepLink } from './hooks/useDeepLink';
 
@@ -22,9 +23,11 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer linking={linkingConfig}>
-        <AppContent />
-      </NavigationContainer>
+      <HealthProfileProvider>
+        <NavigationContainer linking={linkingConfig}>
+          <AppContent />
+        </NavigationContainer>
+      </HealthProfileProvider>
     </AuthProvider>
   );
 }

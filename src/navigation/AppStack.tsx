@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HealthProfilePlaceholderScreen from '../screens/app/HealthProfilePlaceholderScreen';
+import AppTabs from './AppTabs';
 import SettingsScreen from '../screens/app/SettingsScreen';
 import EditHealthProfileScreen from '../screens/app/EditHealthProfileScreen';
 import EditBasicInfoScreen from '../screens/app/EditBasicInfoScreen';
@@ -10,7 +10,7 @@ import EditCuisinePreferencesScreen from '../screens/app/EditCuisinePreferencesS
 import EditAllergensScreen from '../screens/app/EditAllergensScreen';
 
 export type AppStackParamList = {
-  HealthProfile: undefined;
+  AppTabs: undefined;
   Settings: undefined;
   EditHealthProfile: undefined;
   EditBasicInfo: {
@@ -19,7 +19,7 @@ export type AppStackParamList = {
     biological_sex: string;
     height_cm: number;
     weight_kg: number;
-    health_goal: string; // needed to recalculate calories on save
+    health_goal: string;
   };
   EditHealthGoal: {
     health_goal: string;
@@ -45,9 +45,9 @@ export default function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="HealthProfile"
-        component={HealthProfilePlaceholderScreen}
-        options={{ title: 'RecipeApp', headerBackVisible: false }}
+        name="AppTabs"
+        component={AppTabs}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Settings"
