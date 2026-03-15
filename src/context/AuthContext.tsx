@@ -11,7 +11,7 @@ export type DbUser = {
   verified_at: string | null;
   deleted_at: string | null;
   created_at: string;
-  status: 'registered' | 'health_profile_done' | 'active';
+  status: 'registered' | 'active';
 };
 
 type SignUpParams = {

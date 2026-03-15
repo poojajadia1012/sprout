@@ -133,9 +133,9 @@ The health profile is the foundation of all personalisation in the app. It must 
 - Calorie and macro targets are always auto-calculated — there is no manual override
 - Track onboarding progress using a `status` field on the `users` table:
   - `registered` — signed up but health profile not complete
-  - `health_profile_done` — reserved for future use (equipment setup)
   - `active` — health profile complete, full access to main app
 - After health profile is saved, update `users.status` from `registered` → `active`
+- Equipment setup is **not part of onboarding** — it will be presented as a modal the first time the user taps Generate Recipe
 - The app checks `users.status` on every launch to route the user:
   - `registered` → health profile onboarding flow
   - `active` → main app
