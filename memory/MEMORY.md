@@ -79,6 +79,15 @@ Note: SettingsScreen is rendered as the Profile tab. navigation.navigate('EditHe
 - Health profile loaded in HomeScreen via useEffect → Supabase fetch if not in context
 - Meal type gradients: Breakfast=yellow/amber, Lunch=green, Dinner=indigo, Snack=coral
 - Save count hidden when 0
+- Vegan filter: if is_vegan=true, only Vegan-tagged recipes shown (hidden outright)
+- Allergen warning: recipes are never hidden by allergen — a "⚠️ Contains X, Y" tag renders on the card if the recipe contains any of the user's allergens; rationale: hides nothing, works in social feed context (P3+)
+- userAllergens passed from HomeScreen → RecipeCard; matchedAllergens computed per card
+
+## Allergen Architecture
+- `health_profiles.allergens` — array of strings (14 major EU allergens, e.g. 'Gluten', 'Dairy')
+- `Recipe.allergens` — allergens the recipe CONTAINS; names match health_profiles.allergens exactly
+- `saveProfile(overrides?)` — accepts optional overrides merged before Supabase write; fixes setState race in AllergiesScreen
+- `EditAllergensScreen` updates existingProfile in context after save so HomeScreen re-renders immediately
 
 ## UI Conventions
 - Primary color: `#FF6B35` (orange)
