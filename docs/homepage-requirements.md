@@ -37,10 +37,10 @@ The homepage is composed of three layers from top to bottom:
 ## 4.3 Generate Recipe Button
 
 ### P0
-- A large, prominent **"Generate Recipe"** button sits below the header
+- A large, prominent **"✨ Generate Recipe"** button sits below the header
 - Always visible without scrolling — above the feed
 - Tapping it triggers the recipe generation flow (equipment modal on first use, then generation)
-- Button uses the app's primary brand color with clear contrast
+- Button uses the app's primary brand color (`#FF6B35`) with an orange glow shadow
 
 ---
 
@@ -48,65 +48,37 @@ The homepage is composed of three layers from top to bottom:
 
 ### P0
 - Vertical scrolling feed of recipe cards below the generate button
-- Feed is populated with **seed recipes** pre-loaded by the team, ordered editorially
+- Feed is populated with **editorial seed recipes** pre-loaded by the team, ordered editorially
 - Feed loads **10 cards per page** with a **"Load more"** button at the bottom
 - There is no trending logic in P0 — the feed is the seed recipe catalogue
 
 #### Dietary Filtering (P0)
 The feed is filtered client-side against the user's health profile before display:
 1. **Vegan mode** — if `health_profiles.is_vegan = true`, only recipes tagged `'Vegan'` are shown; all other recipes are hidden
-2. **Allergen warnings** — recipes are **never hidden** based on allergens; instead, a warning tag is shown on any recipe that contains an allergen the user has flagged
-   - Warning renders as: *"⚠️ Contains Gluten, Dairy"* (listing only the matched allergens)
-   - Allergen names on recipes exactly match the strings stored in the user's `allergens` array (e.g. `'Dairy'`, `'Gluten'`, `'Peanuts'`)
-   - Rationale: hiding recipes is too paternalistic, and breaks down in social contexts (P3+) where users may want to see recipes from people they follow even if they contain an allergen they manage
+2. **Allergen warnings** — recipes are **never hidden** based on allergens; instead, a warning is shown on any card that contains an allergen matching the user's allergen list
+   - Rationale: hiding recipes is paternalistic and breaks down in social contexts (P2+) where users may want to see recipes from people they follow regardless of allergen
 
 #### Dietary Tag Rules
-- A recipe tagged `'Vegan'` does **not** also carry the `'Vegetarian'` tag (vegan implies vegetarian; duplicate is omitted)
+- A recipe tagged `'Vegan'` does **not** also carry the `'Vegetarian'` tag (vegan implies vegetarian)
 - All Sprout recipes are vegetarian by definition — the `'Vegetarian'` tag is shown only on non-vegan vegetarian recipes
 
-#### P1
-- Switch to **trending recipes** (most generated globally, weighted by the user's cuisine preferences) once real usage data exists
-- Switch to **infinite scroll** as the app grows and social features are added
-- Personalise the feed algorithmically based on the user's health profile, cuisine preferences, saved recipes, and behaviour
+### P1
+- Switch to **trending recipes** (most saved globally, weighted by the user's cuisine preferences) once real usage data exists
+- Switch to **infinite scroll** as the app grows
 
 ---
 
-## 4.5 Recipe Card Design
+## 4.5 Recipe Card
 
-### P0
-Each recipe card in the feed displays:
+The recipe card is a **reusable component** with its own specification. See [`docs/components/recipe-card-requirements.md`](components/recipe-card-requirements.md) for the full card spec including layout, interactions, and the required `Recipe` type fields.
 
-- **Background** — branded gradient card (no photo in P0)
-  - Gradient color is tied to meal type:
-    - Breakfast → warm yellow/orange
-    - Lunch → fresh green
-    - Dinner → deep purple/indigo
-    - Snack → soft coral
-- **Recipe name** — large, bold, prominent
-- **Short description** — 1-2 lines, e.g. "A creamy high-protein bowl ready in 15 minutes"
-- **Macro summary** — protein / carbs / fat in grams, displayed as pill badges
-- **Prep & cook time** — e.g. "10 min prep · 20 min cook"
-- **Dietary tags** — e.g. "Vegetarian", "Vegan" as small label chips
-- **Save button** — bookmark icon, saves to user's collection
-
-#### P1
-- Add **Like button** — heart icon with like count (meaningful once there are multiple users)
-- Users can upload their own photo or video to a recipe, replacing the gradient card
-- AI-generated image option for premium users
+The homepage feed renders one `RecipeCard` component per recipe in the list.
 
 ---
 
 ## 4.6 Card Interactions
 
-### P0
-- **Tap card** → opens full recipe detail screen
-- **Save / bookmark** → saves recipe to user's default collection, confirms with a small toast notification
-- **Save count** is visible on each card
-
-#### P1
-- **Like / heart** → toggles like, updates count optimistically
-- **Share** — share recipe link externally
-- **Comment** — open comment thread on a recipe
+See [`docs/components/recipe-card-requirements.md`](components/recipe-card-requirements.md) for the full interaction spec. The homepage feed is responsible for managing save (and eventually like) state and passing it down to each `RecipeCard` as props.
 
 ---
 
@@ -123,8 +95,8 @@ Standard mobile bottom tab bar with 4 tabs:
 | Profile | 👤 | User profile & settings |
 
 - Active tab is highlighted with the app's primary brand color
-- Bottom tab bar is persistent across all main screens
-- Profile tab routes to the existing Settings screen
+- Bottom tab bar is persistent across all main app screens
+- Profile tab routes to the Settings screen
 
 ---
 
@@ -139,26 +111,25 @@ Standard mobile bottom tab bar with 4 tabs:
 
 ## Technical Notes for Claude Code
 
-- Use a `recipes` table to store all generated recipes with fields: `id`, `name`, `description`, `meal_type`, `protein_g`, `carbs_g`, `fat_g`, `prep_time`, `cook_time`, `dietary_tags` (array), `save_count`, `created_at`
-- Macros are stored as explicit columns (`protein_g`, `carbs_g`, `fat_g`) — not JSON — for efficient querying and indexing
-- No `like_count` column in P0 — add in P1 when likes are introduced
-- Feed query in P0: `SELECT * FROM recipes ORDER BY created_at ASC LIMIT 10 OFFSET {page * 10}` (editorial seed order)
-- Gradient colors should be defined as constants tied to `meal_type` — applied consistently across the app
-- Save actions should update count optimistically on the client, then sync to the server
-- Seed recipes should be inserted into the `recipes` table at setup — aim for 20-30 to give the feed substance on day one
-- Bottom tab bar should use React Navigation's tab navigator
-- Use Unsplash API as a fallback for P1 photo matching when users haven't uploaded their own image
+- Feed is populated from `src/data/seedRecipes.ts` in P0 — no Supabase query needed yet
+- Vegan filter runs client-side via `useMemo` keyed on `existingProfile`
+- Allergen warning logic lives in `RecipeCard` — pass `userAllergens: string[]` from HomeScreen as a prop
+- `recipes` table schema (for when AI-generated recipes are introduced): `id`, `name`, `description`, `meal_type`, `calories`, `protein_g`, `carbs_g`, `fat_g`, `prep_time`, `cook_time`, `dietary_tags[]`, `allergens[]`, `cuisine`, `save_count`, `like_count`, `created_at`
+- Macros stored as **explicit columns** (`protein_g`, `carbs_g`, `fat_g`, `calories`) — not JSON — for efficient querying and indexing
+- Save actions update count optimistically on the client, then sync to Supabase
+- Gradient colours defined in `src/data/seedRecipes.ts` as `MEAL_TYPE_GRADIENTS` — shared with RecipeCard and RecipeDetail header
 
 ---
 
 ## Evolution Path
 
-| Phase | Feed Content | Card Media | Scroll |
-|---|---|---|---|
-| P0 | Editorial seed recipes | Branded gradient | Paginated |
-| P1 | Trending (global, weighted by cuisine preferences) | User photos | Infinite scroll |
-| P2 | Personalised algorithm (health profile + cuisine preferences + behaviour) | User photos + videos | Infinite scroll |
-| P3 | Social feed (recipes from followed users mixed with trending) | User photos + videos | Infinite scroll |
-| P4 | Full social (follow, discover people, activity feed, comments) | User photos + videos + reels | Infinite scroll |
+| Phase | Feed Content | Card Media | Interactions | Scroll |
+|---|---|---|---|---|
+| P0 | Editorial seed recipes | Branded gradient | Save only | Paginated |
+| P0.5 | Editorial seed recipes | Branded gradient | Save + Like | Paginated |
+| P1 | Trending (global, weighted by cuisine preferences) | User photos | Save + Like | Infinite scroll |
+| P2 | Personalised algorithm (health profile + behaviour) | User photos + videos | Save + Like + Comment | Infinite scroll |
+| P3 | Social feed (followed users + trending) | User photos + videos | Full social | Infinite scroll |
+| P4 | Full social (follow, discover, activity feed) | User photos + videos + reels | Full social | Infinite scroll |
 
 ---
