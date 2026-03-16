@@ -24,7 +24,7 @@ const MOTIVATIONAL_MESSAGES: Record<string, string> = {
   recomposition:   'Build the best version of you 🔥',
 };
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
   const { dbUser, user } = useAuth();
   const { existingProfile, setExistingProfile } = useHealthProfile();
   const [page, setPage] = useState(1);
@@ -75,9 +75,7 @@ export default function HomeScreen() {
           <RecipeCard
             recipe={item}
             userAllergens={userAllergens}
-            onPress={() => {
-              // TODO: navigate to RecipeDetailScreen
-            }}
+            onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}
           />
         )}
         ListHeaderComponent={

@@ -71,6 +71,16 @@ Note: SettingsScreen is rendered as the Profile tab. navigation.navigate('EditHe
 - After step 5 (Allergies), saveProfile() sets status → 'active' → RootNavigator routes to AppStack
 - Equipment setup is NOT part of onboarding — modal on first "Generate Recipe" tap
 
+## Recipe Detail Screen (Built — P0)
+- Tapping a RecipeCard navigates to `RecipeDetail` (pushed on AppStack, tab bar hidden)
+- Gradient hero reuses `MEAL_TYPE_GRADIENTS` — same colours as the card
+- Floating back button overlaid on gradient
+- Shows: attribution, nutrition (calories + macros), time, dietary tags, cuisine, allergen warning, ingredients list, numbered steps
+- Sticky save footer (outlined → filled orange on save)
+- Route: `AppStack` → `RecipeDetail` with param `{ recipeId: string }`
+- Looks up recipe from `SEED_RECIPES` by id in P0; Supabase query in P1
+- Save state local (optimistic) — TODO: sync to `user_saved_recipes` in P1
+
 ## Homepage (Built — P0)
 - Header: motivational message by health_goal + first name
 - Generate Recipe button: orange, prominent, above feed
@@ -101,6 +111,9 @@ Note: SettingsScreen is rendered as the Profile tab. navigation.navigate('EditHe
 
 ## Pending / Known Issues
 - SettingsScreen navigation type mismatch (works at runtime, TypeScript loose) — fix before P1
+- HomeScreen navigation prop typed as `any` — tighten before P1
 - Generate Recipe button has no action yet — equipment modal to be built
 - Search and Saved tabs are placeholders
 - `recipes` table not yet created in Supabase — needed for generated recipes
+- Save state on RecipeDetailScreen is local only — sync to Supabase `user_saved_recipes` in P1
+- Recipe type now includes `ingredients`, `steps`, `calories`, `cuisine`, `like_count`, `generated_by` — update Supabase `recipes` table schema when creating it

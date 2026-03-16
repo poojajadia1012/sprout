@@ -8,9 +8,11 @@ import EditHealthGoalScreen from '../screens/app/EditHealthGoalScreen';
 import EditDietaryModeScreen from '../screens/app/EditDietaryModeScreen';
 import EditCuisinePreferencesScreen from '../screens/app/EditCuisinePreferencesScreen';
 import EditAllergensScreen from '../screens/app/EditAllergensScreen';
+import RecipeDetailScreen from '../screens/app/RecipeDetailScreen';
 
 export type AppStackParamList = {
   AppTabs: undefined;
+  RecipeDetail: { recipeId: string };
   Settings: undefined;
   EditHealthProfile: undefined;
   EditBasicInfo: {
@@ -83,6 +85,11 @@ export default function AppStack() {
         name="EditAllergens"
         component={EditAllergensScreen}
         options={{ title: 'Allergies & Avoidances' }}
+      />
+      <Stack.Screen
+        name="RecipeDetail"
+        component={RecipeDetailScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
